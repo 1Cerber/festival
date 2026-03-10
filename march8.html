@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>С 8 Марта!</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --rose: #e8829a; --deep-rose: #c45c75; --blush: #f9d5e0;
+    --cream: #fff8f0; --gold: #d4a853; --soft-gold: #f0d68a;
+    --green: #7aab7e; --dark: #2a1a20;
+  }
+  html, body { width:100%; overflow-x:hidden; background:var(--dark); color:var(--cream); font-family:'Cormorant Garamond',serif; }
+  #particles { position:fixed; inset:0; pointer-events:none; z-index:0; }
+
+  /* INTRO */
+  #intro {
+    position:fixed; inset:0; z-index:100;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    background:radial-gradient(ellipse at 50% 40%, #3d1a26 0%, #1a0a10 100%);
+    transition:opacity 1.2s ease, transform 1.2s ease;
+  }
+  #intro.hide { opacity:0; pointer-events:none; transform:scale(1.05); }
+  .intro-date {
+    font-family:'Playfair Display',serif; font-size:clamp(4rem,15vw,10rem); font-weight:700; line-height:1;
+    background:linear-gradient(135deg,var(--soft-gold),var(--gold),var(--rose));
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    animation:glowPulse 3s ease-in-out infinite;
+  }
+  .intro-subtitle { font-size:clamp(1rem,3vw,1.5rem); font-style:italic; color:var(--blush); letter-spacing:.25em; margin-top:.5rem; opacity:.85; }
+  .intro-btn {
+    margin-top:2.5rem; padding:.75rem 2.5rem; border:1.5px solid var(--rose); background:transparent;
+    color:var(--blush); font-family:'Cormorant Garamond',serif; font-size:1.1rem; letter-spacing:.2em;
+    cursor:pointer; border-radius:50px; transition:background .3s,color .3s,box-shadow .3s;
+    animation:fadeUp 1.2s .8s both;
+  }
+  .intro-btn:hover { background:var(--rose); color:var(--dark); box-shadow:0 0 30px rgba(232,130,154,.5); }
+  @keyframes glowPulse { 0%,100%{filter:drop-shadow(0 0 20px rgba(212,168,83,.4))} 50%{filter:drop-shadow(0 0 50px rgba(212,168,83,.9))} }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+
+  /* MAIN */
+  #main { position:relative; z-index:1; }
+
+  /* HERO */
+  .hero {
+    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:3rem 1.5rem; text-align:center;
+    background:radial-gradient(ellipse 80% 60% at 50% 30%, #3d1520 0%, #1a0a10 70%);
+    position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='%23e8829a' opacity='0.12'/%3E%3C/svg%3E") repeat;
+    animation:bgShift 20s linear infinite; opacity:.5;
+  }
+  @keyframes bgShift { to{background-position:60px 60px} }
+  .petals-wrap { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+  .petal { position:absolute; opacity:0; animation:fall linear infinite; }
+  @keyframes fall { 0%{transform:translateY(-60px) rotate(0deg);opacity:.9} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
+
+  .tag { font-size:.75rem; letter-spacing:.35em; text-transform:uppercase; color:var(--gold); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s .2s both; }
+  .hero-title { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,8vw,6.5rem); font-style:italic; line-height:1.05; opacity:0; animation:fadeUp 1s .4s both; }
+  .hero-title .accent { color:var(--rose); font-style:normal; }
+  .hero-names {
+    font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,4.5rem); font-weight:700; margin-top:.4rem;
+    background:linear-gradient(90deg,var(--rose),var(--soft-gold),var(--rose)); background-size:200%;
+    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+    animation:shimmer 4s ease infinite, fadeUp 1s .6s both; opacity:0;
+  }
+  @keyframes shimmer { 0%,100%{background-position:0%} 50%{background-position:100%} }
+  .hero-divider { width:120px; height:1.5px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:1.5rem auto; opacity:0; animation:fadeUp 1s .8s both; }
+  .hero-poem { max-width:560px; font-size:clamp(1rem,2.5vw,1.25rem); font-style:italic; line-height:1.9; color:var(--blush); opacity:0; animation:fadeUp 1s 1s both; }
+
+  /* CARDS */
+  .cards-section { padding:5rem 1.5rem; background:linear-gradient(180deg,#1a0a10 0%,#12060c 100%); }
+  .section-title { text-align:center; font-family:'Playfair Display',serif; font-size:clamp(1.8rem,5vw,3.5rem); font-style:italic; color:var(--gold); margin-bottom:3rem; }
+  .cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem; max-width:960px; margin:0 auto; }
+  .card {
+    border:1px solid rgba(232,130,154,.25); border-radius:20px; padding:2.5rem 2rem;
+    background:linear-gradient(135deg,rgba(255,248,240,.04),rgba(232,130,154,.06));
+    backdrop-filter:blur(8px); position:relative; overflow:hidden;
+    transform:translateY(40px); opacity:0; transition:transform .6s,opacity .6s,box-shadow .3s;
+  }
+  .card.visible { transform:translateY(0); opacity:1; }
+  .card:hover { box-shadow:0 0 40px rgba(232,130,154,.25),0 0 80px rgba(212,168,83,.12); }
+  .card::before { content:''; position:absolute; top:-40px; right:-40px; width:120px; height:120px; background:radial-gradient(circle,rgba(212,168,83,.15),transparent 70%); border-radius:50%; }
+  .card-icon { font-size:2.5rem; margin-bottom:1rem; display:block; }
+  .card-name { font-family:'Playfair Display',serif; font-size:1.5rem; font-style:italic; color:var(--rose); margin-bottom:.75rem; }
+  .card-text { font-size:1rem; line-height:1.8; color:rgba(255,248,240,.75); font-style:italic; }
+
+  /* POEM */
+  .poem-section { padding:5rem 1.5rem; background:radial-gradient(ellipse 100% 80% at 50% 50%,#2a0f1a 0%,#0d0408 100%); text-align:center; }
+  .poem-container { max-width:650px; margin:0 auto; position:relative; padding:0 2rem; }
+  .poem-container::before, .poem-container::after { content:'❧'; font-size:3rem; color:var(--gold); opacity:.4; position:absolute; top:-1.5rem; }
+  .poem-container::before { left:0; }
+  .poem-container::after  { right:0; transform:scaleX(-1); }
+  .poem-stanza { font-size:clamp(1rem,2.8vw,1.3rem); line-height:2.1; color:var(--blush); font-style:italic; margin-bottom:2rem; opacity:0; transform:translateY(20px); transition:opacity .7s,transform .7s; }
+  .poem-stanza.visible { opacity:1; transform:translateY(0); }
+
+  /* FINALE */
+  .finale { min-height:50vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:4rem 1.5rem; background:radial-gradient(ellipse at 50% 60%,#3d1520 0%,#1a0a10 100%); position:relative; overflow:hidden; }
+  .finale-big { font-family:'Playfair Display',serif; font-size:clamp(3rem,10vw,8rem); font-weight:700; line-height:1; background:linear-gradient(135deg,var(--soft-gold),var(--gold),var(--rose),var(--deep-rose)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:glowPulse 3s ease-in-out infinite; }
+  .finale-sub { font-size:clamp(1rem,3vw,1.5rem); color:var(--blush); font-style:italic; letter-spacing:.1em; margin-top:1rem; opacity:.85; }
+  .hearts-burst { margin-top:2rem; font-size:2rem; animation:heartBeat 1.5s ease-in-out infinite; }
+  @keyframes heartBeat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
+  ::-webkit-scrollbar { width:4px; }
+  ::-webkit-scrollbar-track { background:var(--dark); }
+  ::-webkit-scrollbar-thumb { background:var(--rose); border-radius:4px; }
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+
+<div id="intro">
+  <div class="intro-date">8 марта</div>
+  <div class="intro-subtitle">С праздником весны и любви</div>
+  <button class="intro-btn" onclick="openCard()">Открыть поздравление 🌸</button>
+</div>
+
+<div id="main" style="display:none">
+  <section class="hero">
+    <div class="petals-wrap" id="petalsWrap"></div>
+    <div class="tag">✦ 8 марта ✦ Международный женский день ✦</div>
+    <h1 class="hero-title">С праздником,<br><span class="accent">дорогие</span></h1>
+    <div class="hero-names">Алина &amp; Таисия</div>
+    <div class="hero-divider"></div>
+    <p class="hero-poem">Пусть этот весенний день<br>наполнит сердца теплом,<br>а жизнь цветёт и сияет<br>так же ярко, как вы сами.</p>
+  </section>
+
+  <section class="cards-section">
+    <div class="section-title">Для каждой из вас</div>
+    <div class="cards-grid">
+      <div class="card" data-delay="0">
+        <span class="card-icon">🌹</span>
+        <div class="card-name">Алина</div>
+        <div class="card-text">Алина, в тебе столько света и изящества! Ты вдохновляешь своим присутствием, украшаешь мир своей красотой и теплом. Пусть этот день принесёт тебе радость, цветы и самые искренние улыбки. С 8 марта! 💫</div>
+      </div>
+      <div class="card" data-delay="150">
+        <span class="card-icon">🌸</span>
+        <div class="card-name">Таисия</div>
+        <div class="card-text">Таисия, твоя душа — как весенний сад: щедрая, живая и прекрасная. Ты наполняешь жизнь вокруг себя особой магией. Пусть сегодня и каждый день тебя окружают любовь, счастье и бесконечное тепло! 🌷</div>
+      </div>
+      <div class="card" data-delay="300">
+        <span class="card-icon">✨</span>
+        <div class="card-name">Обеим вместе</div>
+        <div class="card-text">Две прекрасные женщины — два уникальных мира. Пусть жизнь дарит вам только лучшее: мечты, которые сбываются, моменты, которые греют, и люди, которые ценят вас по-настоящему! ❤️</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="poem-section">
+    <div class="section-title">Стихи для вас</div>
+    <div class="poem-container">
+      <div class="poem-stanza" data-stanza>Весна пришла — и мир расцвёл,<br>как будто знал, что вы на свете.<br>Пусть каждый час, пусть каждый день<br>вам улыбается в ответе.</div>
+      <div class="poem-stanza" data-stanza>Алина — нежность без границ,<br>Таисия — тепло и свет.<br>Вы два цветка среди зарниц,<br>прекрасней вас на свете нет.</div>
+      <div class="poem-stanza" data-stanza>Пусть восемь марта каждый год<br>звенит для вас как первый май.<br>Любви вам, счастья, и вперёд —<br>к мечтам, где ждёт волшебный рай.</div>
+    </div>
+  </section>
+
+  <section class="finale">
+    <div class="finale-big">С 8 Марта!</div>
+    <div class="finale-sub">Алина &amp; Таисия — вы лучшие 💖</div>
+    <div class="hearts-burst">🌹 🌷 🌸 💐 🌺</div>
+  </section>
+</div>
+
+<script>
+// Particles
+const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
+let W,H,particles=[];
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+class Particle{
+  constructor(){this.reset();}
+  reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.5+.3;this.vx=(Math.random()-.5)*.3;this.vy=-Math.random()*.4-.1;this.alpha=Math.random()*.5+.1;const h=['232,130,154','212,168,83','180,217,187','249,213,224'];this.color=h[Math.floor(Math.random()*h.length)];}
+  update(){this.x+=this.vx;this.y+=this.vy;if(this.y<-10||this.x<-10||this.x>W+10)this.reset();}
+  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${this.alpha})`;ctx.fill();}
+}
+for(let i=0;i<120;i++)particles.push(new Particle());
+function animParticles(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animParticles);}
+animParticles();
+
+// Intro
+function openCard(){
+  document.getElementById('intro').classList.add('hide');
+  setTimeout(()=>{
+    document.getElementById('intro').style.display='none';
+    document.getElementById('main').style.display='block';
+    spawnPetals();initScrollAnimations();launchConfetti();
+  },1200);
+}
+
+// Petals
+const emojis=['🌸','🌹','🌷','🌺','💮','✿'];
+function spawnPetals(){
+  const wrap=document.getElementById('petalsWrap');
+  for(let i=0;i<20;i++){
+    const p=document.createElement('div');p.className='petal';
+    p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
+    p.style.left=Math.random()*100+'%';
+    p.style.animationDuration=(Math.random()*8+7)+'s';
+    p.style.animationDelay=(Math.random()*10)+'s';
+    p.style.fontSize=(Math.random()*1.2+.8)+'rem';
+    wrap.appendChild(p);
+  }
+}
+
+// Scroll
+function initScrollAnimations(){
+  const obs=new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){const d=e.target.dataset.delay||0;setTimeout(()=>e.target.classList.add('visible'),+d);}
+    });
+  },{threshold:.15});
+  document.querySelectorAll('.card,[data-stanza]').forEach(el=>obs.observe(el));
+}
+
+// Confetti
+function launchConfetti(){
+  const colors=['#e8829a','#d4a853','#f9d5e0','#7aab7e','#f0d68a','#c45c75'];
+  const container=document.querySelector('.hero');
+  const style=document.createElement('style');
+  style.textContent='@keyframes cfall{0%{opacity:1;transform:translateY(-20px) rotate(0deg)}100%{opacity:0;transform:translateY(250px) rotate(540deg)}}';
+  document.head.appendChild(style);
+  for(let i=0;i<60;i++){
+    const c=document.createElement('div');
+    c.style.cssText=`position:absolute;width:${Math.random()*6+4}px;height:${Math.random()*6+4}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:0;pointer-events:none;animation:cfall ${Math.random()*3+2}s ${Math.random()*2}s ease forwards;`;
+    container.appendChild(c);
+  }
+}
+</script>
+</body>
+</html>
