@@ -3,232 +3,929 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>С 8 Марта!</title>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&display=swap" rel="stylesheet">
+<title>PyWeb Quiz — Тест по Python & HTML/CSS</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --rose: #e8829a; --deep-rose: #c45c75; --blush: #f9d5e0;
-    --cream: #fff8f0; --gold: #d4a853; --soft-gold: #f0d68a;
-    --green: #7aab7e; --dark: #2a1a20;
+    --bg: #0a0a0f;
+    --surface: #111118;
+    --surface2: #1a1a24;
+    --border: #2a2a38;
+    --accent: #00ff88;
+    --accent2: #7c3aed;
+    --accent3: #f59e0b;
+    --text: #e8e8f0;
+    --muted: #6b6b80;
+    --danger: #ef4444;
+    --python: #3b82f6;
+    --html: #f97316;
   }
-  html, body { width:100%; overflow-x:hidden; background:var(--dark); color:var(--cream); font-family:'Cormorant Garamond',serif; }
-  #particles { position:fixed; inset:0; pointer-events:none; z-index:0; }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  /* BG GRID */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,255,136,.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,255,136,.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .page { display: none; position: relative; z-index: 1; }
+  .page.active { display: block; }
 
-  /* INTRO */
-  #intro {
-    position:fixed; inset:0; z-index:100;
-    display:flex; flex-direction:column; align-items:center; justify-content:center;
-    background:radial-gradient(ellipse at 50% 40%, #3d1a26 0%, #1a0a10 100%);
-    transition:opacity 1.2s ease, transform 1.2s ease;
+  /* ===== AUTH ===== */
+  .auth-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
   }
-  #intro.hide { opacity:0; pointer-events:none; transform:scale(1.05); }
-  .intro-date {
-    font-family:'Playfair Display',serif; font-size:clamp(4rem,15vw,10rem); font-weight:700; line-height:1;
-    background:linear-gradient(135deg,var(--soft-gold),var(--gold),var(--rose));
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    animation:glowPulse 3s ease-in-out infinite;
+  .auth-card {
+    width: 100%;
+    max-width: 900px;
+    display: grid;
+    grid-template-columns: 1fr 1px 1fr;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 0 80px rgba(0,255,136,.05), 0 40px 80px rgba(0,0,0,.6);
   }
-  .intro-subtitle { font-size:clamp(1rem,3vw,1.5rem); font-style:italic; color:var(--blush); letter-spacing:.25em; margin-top:.5rem; opacity:.85; }
-  .intro-btn {
-    margin-top:2.5rem; padding:.75rem 2.5rem; border:1.5px solid var(--rose); background:transparent;
-    color:var(--blush); font-family:'Cormorant Garamond',serif; font-size:1.1rem; letter-spacing:.2em;
-    cursor:pointer; border-radius:50px; transition:background .3s,color .3s,box-shadow .3s;
-    animation:fadeUp 1.2s .8s both;
+  .auth-divider {
+    background: var(--border);
+    position: relative;
   }
-  .intro-btn:hover { background:var(--rose); color:var(--dark); box-shadow:0 0 30px rgba(232,130,154,.5); }
-  @keyframes glowPulse { 0%,100%{filter:drop-shadow(0 0 20px rgba(212,168,83,.4))} 50%{filter:drop-shadow(0 0 50px rgba(212,168,83,.9))} }
-  @keyframes fadeUp { from{opacity:0;transform:translateY(20px)} to{opacity:1;transform:translateY(0)} }
+  .auth-divider::after {
+    content: 'OR';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 36px; height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: .65rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: .1em;
+  }
+  .auth-panel { padding: 3rem 2.5rem; }
+  .auth-label {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    font-size: .7rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: .15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: .35rem .75rem;
+    border-radius: 100px;
+    margin-bottom: 1.5rem;
+  }
+  .auth-label .dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 2s infinite;
+  }
+  .auth-label.admin .dot { background: var(--accent3); }
+  @keyframes pulse {
+    0%,100% { opacity: 1; }
+    50% { opacity: .3; }
+  }
+  .auth-title {
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1.15;
+    margin-bottom: .5rem;
+  }
+  .auth-title span { color: var(--accent); }
+  .auth-title.admin-title span { color: var(--accent3); }
+  .auth-sub { color: var(--muted); font-size: .9rem; margin-bottom: 2rem; }
+  .field { margin-bottom: 1.2rem; }
+  .field label {
+    display: block;
+    font-size: .75rem;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: .08em;
+    color: var(--muted);
+    margin-bottom: .5rem;
+    text-transform: uppercase;
+  }
+  .field input {
+    width: 100%;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: .8rem 1rem;
+    color: var(--text);
+    font-family: 'Space Mono', monospace;
+    font-size: .9rem;
+    transition: border-color .2s, box-shadow .2s;
+    outline: none;
+  }
+  .field input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px rgba(0,255,136,.1);
+  }
+  .field input.admin-focus:focus {
+    border-color: var(--accent3);
+    box-shadow: 0 0 0 3px rgba(245,158,11,.1);
+  }
+  .btn {
+    width: 100%;
+    padding: .9rem 1.5rem;
+    border: none;
+    border-radius: 10px;
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s, opacity .15s;
+    letter-spacing: .03em;
+  }
+  .btn:hover { transform: translateY(-2px); opacity: .92; }
+  .btn:active { transform: translateY(0); }
+  .btn-user {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 4px 24px rgba(0,255,136,.25);
+  }
+  .btn-admin {
+    background: var(--accent3);
+    color: #000;
+    box-shadow: 0 4px 24px rgba(245,158,11,.25);
+  }
+  .err-msg {
+    color: var(--danger);
+    font-size: .8rem;
+    font-family: 'Space Mono', monospace;
+    margin-top: .75rem;
+    min-height: 1rem;
+  }
+  .hero-tag {
+    position: absolute;
+    top: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'Space Mono', monospace;
+    font-size: .7rem;
+    letter-spacing: .2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
 
-  /* MAIN */
-  #main { position:relative; z-index:1; }
-
-  /* HERO */
-  .hero {
-    min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center;
-    padding:3rem 1.5rem; text-align:center;
-    background:radial-gradient(ellipse 80% 60% at 50% 30%, #3d1520 0%, #1a0a10 70%);
-    position:relative; overflow:hidden;
+  /* ===== QUIZ ===== */
+  .quiz-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
   }
-  .hero::before {
-    content:''; position:absolute; inset:0;
-    background:url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='30' cy='30' r='1' fill='%23e8829a' opacity='0.12'/%3E%3C/svg%3E") repeat;
-    animation:bgShift 20s linear infinite; opacity:.5;
+  .quiz-logo {
+    font-size: 1.1rem;
+    font-weight: 800;
+    letter-spacing: -.01em;
   }
-  @keyframes bgShift { to{background-position:60px 60px} }
-  .petals-wrap { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
-  .petal { position:absolute; opacity:0; animation:fall linear infinite; }
-  @keyframes fall { 0%{transform:translateY(-60px) rotate(0deg);opacity:.9} 100%{transform:translateY(110vh) rotate(720deg);opacity:0} }
-
-  .tag { font-size:.75rem; letter-spacing:.35em; text-transform:uppercase; color:var(--gold); margin-bottom:1.5rem; opacity:0; animation:fadeUp 1s .2s both; }
-  .hero-title { font-family:'Playfair Display',serif; font-size:clamp(2.8rem,8vw,6.5rem); font-style:italic; line-height:1.05; opacity:0; animation:fadeUp 1s .4s both; }
-  .hero-title .accent { color:var(--rose); font-style:normal; }
-  .hero-names {
-    font-family:'Playfair Display',serif; font-size:clamp(2rem,6vw,4.5rem); font-weight:700; margin-top:.4rem;
-    background:linear-gradient(90deg,var(--rose),var(--soft-gold),var(--rose)); background-size:200%;
-    -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
-    animation:shimmer 4s ease infinite, fadeUp 1s .6s both; opacity:0;
+  .quiz-logo span { color: var(--accent); }
+  .quiz-user {
+    font-family: 'Space Mono', monospace;
+    font-size: .8rem;
+    color: var(--muted);
   }
-  @keyframes shimmer { 0%,100%{background-position:0%} 50%{background-position:100%} }
-  .hero-divider { width:120px; height:1.5px; background:linear-gradient(90deg,transparent,var(--gold),transparent); margin:1.5rem auto; opacity:0; animation:fadeUp 1s .8s both; }
-  .hero-poem { max-width:560px; font-size:clamp(1rem,2.5vw,1.25rem); font-style:italic; line-height:1.9; color:var(--blush); opacity:0; animation:fadeUp 1s 1s both; }
-
-  /* CARDS */
-  .cards-section { padding:5rem 1.5rem; background:linear-gradient(180deg,#1a0a10 0%,#12060c 100%); }
-  .section-title { text-align:center; font-family:'Playfair Display',serif; font-size:clamp(1.8rem,5vw,3.5rem); font-style:italic; color:var(--gold); margin-bottom:3rem; }
-  .cards-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:2rem; max-width:960px; margin:0 auto; }
-  .card {
-    border:1px solid rgba(232,130,154,.25); border-radius:20px; padding:2.5rem 2rem;
-    background:linear-gradient(135deg,rgba(255,248,240,.04),rgba(232,130,154,.06));
-    backdrop-filter:blur(8px); position:relative; overflow:hidden;
-    transform:translateY(40px); opacity:0; transition:transform .6s,opacity .6s,box-shadow .3s;
+  .quiz-user strong { color: var(--text); }
+  .progress-bar-wrap {
+    background: var(--border);
+    height: 4px;
+    position: sticky;
+    top: 57px;
+    z-index: 9;
   }
-  .card.visible { transform:translateY(0); opacity:1; }
-  .card:hover { box-shadow:0 0 40px rgba(232,130,154,.25),0 0 80px rgba(212,168,83,.12); }
-  .card::before { content:''; position:absolute; top:-40px; right:-40px; width:120px; height:120px; background:radial-gradient(circle,rgba(212,168,83,.15),transparent 70%); border-radius:50%; }
-  .card-icon { font-size:2.5rem; margin-bottom:1rem; display:block; }
-  .card-name { font-family:'Playfair Display',serif; font-size:1.5rem; font-style:italic; color:var(--rose); margin-bottom:.75rem; }
-  .card-text { font-size:1rem; line-height:1.8; color:rgba(255,248,240,.75); font-style:italic; }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transition: width .4s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+  .quiz-body { max-width: 780px; margin: 0 auto; padding: 2.5rem 1.5rem 5rem; }
+  .q-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .q-num {
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    color: var(--muted);
+    letter-spacing: .1em;
+  }
+  .q-tag {
+    font-size: .7rem;
+    font-family: 'Space Mono', monospace;
+    padding: .25rem .65rem;
+    border-radius: 100px;
+    letter-spacing: .08em;
+    font-weight: 700;
+  }
+  .q-tag.python { background: rgba(59,130,246,.15); color: var(--python); border: 1px solid rgba(59,130,246,.3); }
+  .q-tag.html { background: rgba(249,115,22,.15); color: var(--html); border: 1px solid rgba(249,115,22,.3); }
+  .q-text {
+    font-size: 1.25rem;
+    font-weight: 700;
+    line-height: 1.5;
+    margin-bottom: 2rem;
+  }
+  .options { display: flex; flex-direction: column; gap: .8rem; }
+  .option {
+    background: var(--surface);
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    transition: all .2s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: .95rem;
+  }
+  .option:hover { border-color: var(--accent); background: rgba(0,255,136,.04); transform: translateX(4px); }
+  .option.selected { border-color: var(--accent); background: rgba(0,255,136,.08); }
+  .option.correct { border-color: #22c55e; background: rgba(34,197,94,.1); }
+  .option.wrong { border-color: var(--danger); background: rgba(239,68,68,.1); }
+  .option-letter {
+    width: 30px; height: 30px;
+    border-radius: 8px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Space Mono', monospace;
+    font-size: .75rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    transition: all .2s;
+  }
+  .option.selected .option-letter { background: var(--accent); color: #000; border-color: var(--accent); }
+  .option.correct .option-letter { background: #22c55e; color: #000; border-color: #22c55e; }
+  .option.wrong .option-letter { background: var(--danger); color: #fff; border-color: var(--danger); }
+  .quiz-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 2.5rem;
+    gap: 1rem;
+  }
+  .btn-nav {
+    padding: .8rem 2rem;
+    border-radius: 10px;
+    border: none;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: .95rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-next {
+    background: var(--accent);
+    color: #000;
+    box-shadow: 0 4px 20px rgba(0,255,136,.2);
+    margin-left: auto;
+  }
+  .btn-next:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,255,136,.3); }
+  .btn-next:disabled { opacity: .35; cursor: not-allowed; transform: none; }
+  .timer-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: .8rem;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: .4rem .8rem;
+    border-radius: 8px;
+  }
 
-  /* POEM */
-  .poem-section { padding:5rem 1.5rem; background:radial-gradient(ellipse 100% 80% at 50% 50%,#2a0f1a 0%,#0d0408 100%); text-align:center; }
-  .poem-container { max-width:650px; margin:0 auto; position:relative; padding:0 2rem; }
-  .poem-container::before, .poem-container::after { content:'❧'; font-size:3rem; color:var(--gold); opacity:.4; position:absolute; top:-1.5rem; }
-  .poem-container::before { left:0; }
-  .poem-container::after  { right:0; transform:scaleX(-1); }
-  .poem-stanza { font-size:clamp(1rem,2.8vw,1.3rem); line-height:2.1; color:var(--blush); font-style:italic; margin-bottom:2rem; opacity:0; transform:translateY(20px); transition:opacity .7s,transform .7s; }
-  .poem-stanza.visible { opacity:1; transform:translateY(0); }
+  /* ===== RESULTS ===== */
+  .result-wrap {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+  .result-card {
+    max-width: 600px;
+    width: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 3rem;
+    text-align: center;
+    box-shadow: 0 40px 80px rgba(0,0,0,.5);
+  }
+  .result-score {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: .5rem;
+  }
+  .result-score span { color: var(--accent); }
+  .result-label { color: var(--muted); margin-bottom: 2rem; font-size: 1.1rem; }
+  .result-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .result-stat {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 1.2rem;
+  }
+  .result-stat-val {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: .2rem;
+  }
+  .result-stat-val.py { color: var(--python); }
+  .result-stat-val.ht { color: var(--html); }
+  .result-stat-key { font-size: .75rem; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .result-grade {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    padding: 1rem;
+    border-radius: 12px;
+    background: rgba(0,255,136,.06);
+    border: 1px solid rgba(0,255,136,.2);
+  }
 
-  /* FINALE */
-  .finale { min-height:50vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:4rem 1.5rem; background:radial-gradient(ellipse at 50% 60%,#3d1520 0%,#1a0a10 100%); position:relative; overflow:hidden; }
-  .finale-big { font-family:'Playfair Display',serif; font-size:clamp(3rem,10vw,8rem); font-weight:700; line-height:1; background:linear-gradient(135deg,var(--soft-gold),var(--gold),var(--rose),var(--deep-rose)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; animation:glowPulse 3s ease-in-out infinite; }
-  .finale-sub { font-size:clamp(1rem,3vw,1.5rem); color:var(--blush); font-style:italic; letter-spacing:.1em; margin-top:1rem; opacity:.85; }
-  .hearts-burst { margin-top:2rem; font-size:2rem; animation:heartBeat 1.5s ease-in-out infinite; }
-  @keyframes heartBeat { 0%,100%{transform:scale(1)} 50%{transform:scale(1.25)} }
-  ::-webkit-scrollbar { width:4px; }
-  ::-webkit-scrollbar-track { background:var(--dark); }
-  ::-webkit-scrollbar-thumb { background:var(--rose); border-radius:4px; }
+  /* ===== ADMIN ===== */
+  .admin-wrap { min-height: 100vh; }
+  .admin-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.2rem 2rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+  }
+  .admin-title-bar { font-size: 1.1rem; font-weight: 800; }
+  .admin-title-bar span { color: var(--accent3); }
+  .btn-sm {
+    padding: .5rem 1.2rem;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    font-size: .85rem;
+    cursor: pointer;
+    transition: all .2s;
+  }
+  .btn-sm:hover { border-color: var(--accent3); color: var(--accent3); }
+  .admin-body { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+  .admin-stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+  .admin-stat {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.5rem;
+  }
+  .admin-stat-val { font-size: 2rem; font-weight: 800; color: var(--accent3); }
+  .admin-stat-key { font-size: .75rem; color: var(--muted); font-family: 'Space Mono', monospace; margin-top: .25rem; }
+  .admin-table-wrap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .admin-table-head {
+    padding: 1.2rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+    font-size: .8rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: .08em;
+    display: flex;
+    justify-content: space-between;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    text-align: left;
+    padding: .9rem 1.5rem;
+    font-size: .72rem;
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface2);
+  }
+  td {
+    padding: .9rem 1.5rem;
+    font-size: .9rem;
+    border-bottom: 1px solid rgba(42,42,56,.5);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(0,255,136,.02); }
+  .badge {
+    display: inline-block;
+    padding: .2rem .65rem;
+    border-radius: 100px;
+    font-size: .7rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+  }
+  .badge-a { background: rgba(0,255,136,.15); color: var(--accent); }
+  .badge-b { background: rgba(59,130,246,.15); color: var(--python); }
+  .badge-c { background: rgba(245,158,11,.15); color: var(--accent3); }
+  .badge-d { background: rgba(239,68,68,.15); color: var(--danger); }
+  .empty-state {
+    text-align: center;
+    padding: 4rem;
+    color: var(--muted);
+    font-size: .9rem;
+    font-family: 'Space Mono', monospace;
+  }
+  /* Responsive */
+  @media (max-width: 700px) {
+    .auth-card { grid-template-columns: 1fr; }
+    .auth-divider { display: none; }
+    .admin-stats { grid-template-columns: 1fr 1fr; }
+  }
 </style>
 </head>
 <body>
-<canvas id="particles"></canvas>
 
-<div id="intro">
-  <div class="intro-date">8 марта</div>
-  <div class="intro-subtitle">С праздником весны и любви</div>
-  <button class="intro-btn" onclick="openCard()">Открыть поздравление 🌸</button>
+<!-- PAGE: AUTH -->
+<div class="page active" id="page-auth">
+  <div class="auth-wrap">
+    <div style="position:relative; width:100%; max-width:900px;">
+      <div class="hero-tag">🐍 PyWeb Quiz · 100 вопросов</div>
+      <div class="auth-card" style="margin-top:3.5rem;">
+        <!-- USER PANEL -->
+        <div class="auth-panel">
+          <div class="auth-label"><span class="dot"></span>Новый участник</div>
+          <h2 class="auth-title">Зарегистрируйся<br>и <span>пройди тест</span></h2>
+          <p class="auth-sub">Python • HTML • CSS — 100 вопросов</p>
+          <div class="field">
+            <label>Имя пользователя</label>
+            <input type="text" id="reg-name" placeholder="Введи своё имя" />
+          </div>
+          <div class="field">
+            <label>Пароль</label>
+            <input type="password" id="reg-pass" placeholder="Придумай пароль" />
+          </div>
+          <button class="btn btn-user" onclick="registerUser()">Начать тест →</button>
+          <div class="err-msg" id="reg-err"></div>
+        </div>
+        <div class="auth-divider"></div>
+        <!-- ADMIN PANEL -->
+        <div class="auth-panel">
+          <div class="auth-label admin"><span class="dot"></span>Панель администратора</div>
+          <h2 class="auth-title admin-title">Вход для<br><span>Админа</span></h2>
+          <p class="auth-sub">Просмотр результатов всех участников</p>
+          <div class="field">
+            <label>Логин администратора</label>
+            <input type="text" id="adm-login" class="admin-focus" placeholder="admin" />
+          </div>
+          <div class="field">
+            <label>Пароль администратора</label>
+            <input type="password" id="adm-pass" class="admin-focus" placeholder="••••••••" />
+          </div>
+          <button class="btn btn-admin" onclick="loginAdmin()">Войти в панель →</button>
+          <div class="err-msg" id="adm-err"></div>
+          <p style="font-size:.75rem; color:var(--muted); margin-top:1rem; font-family:'Space Mono',monospace;">Данные: admin / admin123</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
-<div id="main" style="display:none">
-  <section class="hero">
-    <div class="petals-wrap" id="petalsWrap"></div>
-    <div class="tag">✦ 8 марта ✦ Международный женский день ✦</div>
-    <h1 class="hero-title">С праздником,<br><span class="accent">дорогие</span></h1>
-    <div class="hero-names">Алина &amp; Таисия</div>
-    <div class="hero-divider"></div>
-    <p class="hero-poem">Пусть этот весенний день<br>наполнит сердца теплом,<br>а жизнь цветёт и сияет<br>так же ярко, как вы сами.</p>
-  </section>
+<!-- PAGE: QUIZ -->
+<div class="page" id="page-quiz">
+  <div class="quiz-header">
+    <div class="quiz-logo">Py<span>Web</span> Quiz</div>
+    <div class="quiz-user">Участник: <strong id="quiz-username">—</strong></div>
+  </div>
+  <div class="progress-bar-wrap"><div class="progress-bar" id="progress-bar"></div></div>
+  <div class="quiz-body">
+    <div class="q-meta">
+      <span class="q-num" id="q-counter">Вопрос 1 / 100</span>
+      <span class="q-tag" id="q-tag">Python</span>
+    </div>
+    <div class="q-text" id="q-text">Загрузка...</div>
+    <div class="options" id="options"></div>
+    <div class="quiz-nav">
+      <div class="timer-badge" id="q-timer">⏱ 0:00</div>
+      <button class="btn-nav btn-next" id="btn-next" onclick="nextQuestion()" disabled>Далее →</button>
+    </div>
+  </div>
+</div>
 
-  <section class="cards-section">
-    <div class="section-title">Для каждой из вас</div>
-    <div class="cards-grid">
-      <div class="card" data-delay="0">
-        <span class="card-icon">🌹</span>
-        <div class="card-name">Алина</div>
-        <div class="card-text">Алина, в тебе столько света и изящества! Ты вдохновляешь своим присутствием, украшаешь мир своей красотой и теплом. Пусть этот день принесёт тебе радость, цветы и самые искренние улыбки. С 8 марта! 💫</div>
+<!-- PAGE: RESULT -->
+<div class="page" id="page-result">
+  <div class="result-wrap">
+    <div class="result-card">
+      <div style="font-size:.8rem; font-family:'Space Mono',monospace; color:var(--muted); margin-bottom:1rem;">РЕЗУЛЬТАТ ТЕСТА</div>
+      <div class="result-score"><span id="res-score">0</span><span style="color:var(--muted);font-size:3rem;">/100</span></div>
+      <div class="result-label">Правильных ответов</div>
+      <div class="result-grid">
+        <div class="result-stat">
+          <div class="result-stat-val py" id="res-py">0/50</div>
+          <div class="result-stat-key">Python</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val ht" id="res-html">0/50</div>
+          <div class="result-stat-key">HTML / CSS</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val" id="res-pct" style="color:var(--accent);">0%</div>
+          <div class="result-stat-key">Процент</div>
+        </div>
+        <div class="result-stat">
+          <div class="result-stat-val" id="res-time" style="color:var(--accent2);">0:00</div>
+          <div class="result-stat-key">Время</div>
+        </div>
       </div>
-      <div class="card" data-delay="150">
-        <span class="card-icon">🌸</span>
-        <div class="card-name">Таисия</div>
-        <div class="card-text">Таисия, твоя душа — как весенний сад: щедрая, живая и прекрасная. Ты наполняешь жизнь вокруг себя особой магией. Пусть сегодня и каждый день тебя окружают любовь, счастье и бесконечное тепло! 🌷</div>
+      <div class="result-grade" id="res-grade">—</div>
+      <button class="btn btn-user" onclick="goToAuth()" style="margin-top:.5rem;">← Вернуться</button>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE: ADMIN -->
+<div class="page" id="page-admin">
+  <div class="admin-wrap">
+    <div class="admin-header">
+      <div class="admin-title-bar">🔐 <span>Admin</span> Panel — Результаты</div>
+      <button class="btn-sm" onclick="goToAuth()">← Выйти</button>
+    </div>
+    <div class="admin-body">
+      <div class="admin-stats">
+        <div class="admin-stat">
+          <div class="admin-stat-val" id="stat-total">0</div>
+          <div class="admin-stat-key">Всего участников</div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat-val" id="stat-avg">—</div>
+          <div class="admin-stat-key">Средний балл</div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat-val" id="stat-best">—</div>
+          <div class="admin-stat-key">Лучший результат</div>
+        </div>
+        <div class="admin-stat">
+          <div class="admin-stat-val" id="stat-pass">0%</div>
+          <div class="admin-stat-key">Прошли (≥60%)</div>
+        </div>
       </div>
-      <div class="card" data-delay="300">
-        <span class="card-icon">✨</span>
-        <div class="card-name">Обеим вместе</div>
-        <div class="card-text">Две прекрасные женщины — два уникальных мира. Пусть жизнь дарит вам только лучшее: мечты, которые сбываются, моменты, которые греют, и люди, которые ценят вас по-настоящему! ❤️</div>
+      <div class="admin-table-wrap">
+        <div class="admin-table-head">
+          <span>УЧАСТНИКИ И РЕЗУЛЬТАТЫ</span>
+          <span id="admin-count">0 записей</span>
+        </div>
+        <div id="admin-table-body">
+          <div class="empty-state">Нет данных. Участники ещё не проходили тест.</div>
+        </div>
       </div>
     </div>
-  </section>
-
-  <section class="poem-section">
-    <div class="section-title">Стихи для вас</div>
-    <div class="poem-container">
-      <div class="poem-stanza" data-stanza>Весна пришла — и мир расцвёл,<br>как будто знал, что вы на свете.<br>Пусть каждый час, пусть каждый день<br>вам улыбается в ответе.</div>
-      <div class="poem-stanza" data-stanza>Алина — нежность без границ,<br>Таисия — тепло и свет.<br>Вы два цветка среди зарниц,<br>прекрасней вас на свете нет.</div>
-      <div class="poem-stanza" data-stanza>Пусть восемь марта каждый год<br>звенит для вас как первый май.<br>Любви вам, счастья, и вперёд —<br>к мечтам, где ждёт волшебный рай.</div>
-    </div>
-  </section>
-
-  <section class="finale">
-    <div class="finale-big">С 8 Марта!</div>
-    <div class="finale-sub">Алина &amp; Таисия — вы лучшие 💖</div>
-    <div class="hearts-burst">🌹 🌷 🌸 💐 🌺</div>
-  </section>
+  </div>
 </div>
 
 <script>
-// Particles
-const canvas=document.getElementById('particles'),ctx=canvas.getContext('2d');
-let W,H,particles=[];
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-resize();window.addEventListener('resize',resize);
-class Particle{
-  constructor(){this.reset();}
-  reset(){this.x=Math.random()*W;this.y=Math.random()*H;this.r=Math.random()*1.5+.3;this.vx=(Math.random()-.5)*.3;this.vy=-Math.random()*.4-.1;this.alpha=Math.random()*.5+.1;const h=['232,130,154','212,168,83','180,217,187','249,213,224'];this.color=h[Math.floor(Math.random()*h.length)];}
-  update(){this.x+=this.vx;this.y+=this.vy;if(this.y<-10||this.x<-10||this.x>W+10)this.reset();}
-  draw(){ctx.beginPath();ctx.arc(this.x,this.y,this.r,0,Math.PI*2);ctx.fillStyle=`rgba(${this.color},${this.alpha})`;ctx.fill();}
-}
-for(let i=0;i<120;i++)particles.push(new Particle());
-function animParticles(){ctx.clearRect(0,0,W,H);particles.forEach(p=>{p.update();p.draw();});requestAnimationFrame(animParticles);}
-animParticles();
+// ============ DATA ============
+const ADMIN_LOGIN = 'admin';
+const ADMIN_PASS  = 'admin123';
 
-// Intro
-function openCard(){
-  document.getElementById('intro').classList.add('hide');
-  setTimeout(()=>{
-    document.getElementById('intro').style.display='none';
-    document.getElementById('main').style.display='block';
-    spawnPetals();initScrollAnimations();launchConfetti();
-  },1200);
+function getResults() {
+  try { return JSON.parse(localStorage.getItem('quiz_results') || '[]'); } catch { return []; }
+}
+function saveResult(r) {
+  const arr = getResults();
+  arr.push(r);
+  localStorage.setItem('quiz_results', JSON.stringify(arr));
 }
 
-// Petals
-const emojis=['🌸','🌹','🌷','🌺','💮','✿'];
-function spawnPetals(){
-  const wrap=document.getElementById('petalsWrap');
-  for(let i=0;i<20;i++){
-    const p=document.createElement('div');p.className='petal';
-    p.textContent=emojis[Math.floor(Math.random()*emojis.length)];
-    p.style.left=Math.random()*100+'%';
-    p.style.animationDuration=(Math.random()*8+7)+'s';
-    p.style.animationDelay=(Math.random()*10)+'s';
-    p.style.fontSize=(Math.random()*1.2+.8)+'rem';
-    wrap.appendChild(p);
+// ============ QUESTIONS ============
+const questions = [
+  // PYTHON (50)
+  {t:'python', q:'Что выведет print(type([]))?', opts:['<class "list">','<class "array">','list','<type list>'], a:0},
+  {t:'python', q:'Как объявить список в Python?', opts:['list = {}','list = []','list = ()','list = <>'], a:1},
+  {t:'python', q:'Какой метод добавляет элемент в конец списка?', opts:['insert()','push()','append()','add()'], a:2},
+  {t:'python', q:'Что такое None в Python?', opts:['0','Пустая строка','Объект NoneType','False'], a:2},
+  {t:'python', q:'Как написать однострочный комментарий?', opts:['// комментарий','/* комментарий */','# комментарий','-- комментарий'], a:2},
+  {t:'python', q:'Какой оператор используется для возведения в степень?', opts:['^','**','^^','pow'], a:1},
+  {t:'python', q:'Что делает len() ?', opts:['Удаляет элемент','Возвращает длину','Создаёт список','Сортирует'], a:1},
+  {t:'python', q:'Как объявить словарь?', opts:['d = []','d = ()','d = {}','d = set()'], a:2},
+  {t:'python', q:'Какой метод возвращает все ключи словаря?', opts:['.values()','keys()','d.keys()','items()'], a:2},
+  {t:'python', q:'Что значит elif?', opts:['Else if','End if','Else loop','Elif = lambda'], a:0},
+  {t:'python', q:'Как получить срез списка lst от 1 до 3 (не включая 3)?', opts:['lst[1:3]','lst[1..3]','lst[1-3]','lst(1,3)'], a:0},
+  {t:'python', q:'Что делает range(5)?', opts:['[1,2,3,4,5]','[0,1,2,3,4]','(0,5)','range объект 1–5'], a:1},
+  {t:'python', q:'Как объявить функцию?', opts:['function foo():','def foo():','func foo():','fn foo():'], a:1},
+  {t:'python', q:'Что возвращает "hello".upper()?', opts:['HELLO','Hello','hello','HeLLo'], a:0},
+  {t:'python', q:'Какой тип данных неизменяем (immutable)?', opts:['list','dict','set','tuple'], a:3},
+  {t:'python', q:'Как импортировать модуль math?', opts:['import math','#include math','require math','use math'], a:0},
+  {t:'python', q:'Что выведет print(10 // 3)?', opts:['3.33','3','4','2'], a:1},
+  {t:'python', q:'Что делает strip() ?', opts:['Удаляет подстроку','Разбивает строку','Убирает пробелы по краям','Объединяет строки'], a:2},
+  {t:'python', q:'Как проверить наличие ключа "x" в словаре d?', opts:['"x" in d','d.has("x")','d.contains("x")','x in d.keys() only'], a:0},
+  {t:'python', q:'Что такое lambda в Python?', opts:['Модуль','Анонимная функция','Класс','Декоратор'], a:1},
+  {t:'python', q:'Как создать множество (set)?', opts:['s = []','s = {}  # с элементами','s = set()','Оба B и C верны'], a:3},
+  {t:'python', q:'Что делает zip()?', opts:['Архивирует файлы','Объединяет итерируемые в пары','Сортирует','Копирует список'], a:1},
+  {t:'python', q:'Что означает *args в функции?', opts:['Обязательный аргумент','Произвольное кол-во позиц. аргументов','Ключевые аргументы','Ссылка на функцию'], a:1},
+  {t:'python', q:'Какой метод разбивает строку?', opts:['join()','split()','slice()','cut()'], a:1},
+  {t:'python', q:'Что делает sorted()?', opts:['Сортирует на месте','Возвращает новый сортированный список','Удаляет дубли','Меняет тип'], a:1},
+  {t:'python', q:'Что выведет bool(0)?', opts:['True','False','0','None'], a:1},
+  {t:'python', q:'Как открыть файл для чтения?', opts:['open("f","w")','open("f")','open("f","r")','Оба B и C'], a:3},
+  {t:'python', q:'Что делает enumerate()?', opts:['Считает элементы','Возвращает индекс и значение','Фильтрует','Сортирует'], a:1},
+  {t:'python', q:'Как наследоваться от класса Animal?', opts:['class Dog(Animal):','class Dog extends Animal:','class Dog inherits Animal:','class Dog -> Animal:'], a:0},
+  {t:'python', q:'Что делает map(func, lst)?', opts:['Фильтрует элементы','Применяет func к каждому элементу','Создаёт словарь','Ищет элемент'], a:1},
+  {t:'python', q:'Что такое list comprehension?', opts:['Метод списка','Краткая запись создания списка','Тип данных','Встроенный модуль'], a:1},
+  {t:'python', q:'Что делает try/except?', opts:['Цикл','Импорт','Обработка ошибок','Условие'], a:2},
+  {t:'python', q:'Что такое self в классе?', opts:['Ключевое слово языка','Ссылка на текущий объект','Метод','Константа'], a:1},
+  {t:'python', q:'Как удалить элемент из списка по значению?', opts:['.delete()','del lst[i]','.remove(val)','.pop(val)'], a:2},
+  {t:'python', q:'Что возвращает dict.get("key", default)?', opts:['Ошибку если нет ключа','Значение или default','Всегда default','None'], a:1},
+  {t:'python', q:'Что делает global в функции?', opts:['Создаёт модульную переменную','Указывает на глобальную переменную','Удаляет переменную','Копирует переменную'], a:1},
+  {t:'python', q:'Как объединить две строки?', opts:['str1 + str2','str1.join(str2)','concat(str1,str2)','str1 & str2'], a:0},
+  {t:'python', q:'Что делает filter(func, lst)?', opts:['Возвращает True/False','Оставляет элементы, где func вернула True','Удаляет элементы','Считает элементы'], a:1},
+  {t:'python', q:'Что такое f-строка?', opts:['Строка для файлов','Строка с встроенными выражениями (f"...")','Форматированная строка C-стиля','Тип данных'], a:1},
+  {t:'python', q:'Как вызвать метод родителя?', opts:['parent.method()','super().method()','base.method()','this.method()'], a:1},
+  {t:'python', q:'Что делает __init__?', opts:['Финализатор','Конструктор','Декоратор','Статический метод'], a:1},
+  {t:'python', q:'Что вернёт "py" * 3?', opts:['py3','pypypy','py py py','Ошибка'], a:1},
+  {t:'python', q:'Как проверить тип переменной x?', opts:['type(x)','x.type()','typeof x','gettype(x)'], a:0},
+  {t:'python', q:'Что делает pass?', opts:['Выход из функции','Пустой оператор','Пропускает итерацию','Останавливает программу'], a:1},
+  {t:'python', q:'Что такое генератор (generator)?', opts:['Функция без return','Функция с yield','Тип списка','Встроенный метод'], a:1},
+  {t:'python', q:'Как получить максимум списка?', opts:['lst.max()','max(lst)','lst.maximum()','Math.max(lst)'], a:1},
+  {t:'python', q:'Что такое декоратор?', opts:['Встроенная функция','Функция, изменяющая другую функцию','Класс','Модуль'], a:1},
+  {t:'python', q:'Что делает continue в цикле?', opts:['Прерывает цикл','Пропускает текущую итерацию','Завершает программу','Ничего'], a:1},
+  {t:'python', q:'Как объявить константу (по соглашению)?', opts:['const MAX = 10','MAX = 10 (UPPER_CASE)','final MAX = 10','#define MAX 10'], a:1},
+  {t:'python', q:'Что делает os.path.join()?', opts:['Создаёт файл','Соединяет части пути','Удаляет папку','Проверяет существование'], a:1},
+  // HTML/CSS (50)
+  {t:'html', q:'Какой тег задаёт заголовок первого уровня?', opts:['<h1>','<header>','<title>','<heading>'], a:0},
+  {t:'html', q:'Что делает тег <a>?', opts:['Изображение','Ссылка','Абзац','Список'], a:1},
+  {t:'html', q:'Какой атрибут задаёт ссылку в <a>?', opts:['src','link','href','url'], a:2},
+  {t:'html', q:'Что делает display: flex?', opts:['Скрывает элемент','Включает flexbox-контейнер','Делает блочный элемент','Центрирует текст'], a:1},
+  {t:'html', q:'Как задать цвет текста в CSS?', opts:['font-color','text-color','color','foreground'], a:2},
+  {t:'html', q:'Что такое box model?', opts:['Сетка Bootstrap','Модель блока (margin, border, padding, content)','3D-трансформация','Flex-контейнер'], a:1},
+  {t:'html', q:'Какой тег используется для изображения?', opts:['<image>','<img>','<pic>','<photo>'], a:1},
+  {t:'html', q:'Что делает тег <ul>?', opts:['Нумерованный список','Ненумерованный список','Таблица','Форма'], a:1},
+  {t:'html', q:'Как подключить CSS-файл?', opts:['<style src="f.css">','<css href="f.css">','<link rel="stylesheet" href="f.css">','@import "f.css" в HTML'], a:2},
+  {t:'html', q:'Что делает z-index?', opts:['Масштаб элемента','Порядок наложения элементов','Расстояние от края','Прозрачность'], a:1},
+  {t:'html', q:'Как сделать текст жирным в CSS?', opts:['font-style: bold','text-weight: bold','font-weight: bold','bold: true'], a:2},
+  {t:'html', q:'Что такое медиазапросы (@media)?', opts:['Загрузка медиа','Адаптивные стили под разные экраны','CSS-анимация','Переменные CSS'], a:1},
+  {t:'html', q:'Что делает position: absolute?', opts:['Фиксирует у экрана','Позиционирует относительно ближайшего positioned-предка','Убирает из потока абсолютно','Делает элемент фиксированным'], a:1},
+  {t:'html', q:'Как задать переменную в CSS?', opts:['$var: red','--my-color: red','var: red','set(--color, red)'], a:1},
+  {t:'html', q:'Что делает тег <meta charset="UTF-8">?', opts:['Задаёт стили','Устанавливает кодировку','Подключает скрипт','Заголовок страницы'], a:1},
+  {t:'html', q:'Что означает CSS-селектор .foo?', opts:['Тег foo','ID foo','Класс foo','Атрибут foo'], a:2},
+  {t:'html', q:'Какое свойство управляет прозрачностью?', opts:['transparent','alpha','visibility','opacity'], a:3},
+  {t:'html', q:'Что делает flex-direction: column?', opts:['Горизонтальный ряд','Вертикальный столбец','Обратный порядок','Grid-колонки'], a:1},
+  {t:'html', q:'Как скрыть элемент, но сохранить место?', opts:['display: none','visibility: hidden','opacity: 0','Оба B и C'], a:1},
+  {t:'html', q:'Что такое псевдокласс :hover?', opts:['Стиль при фокусе','Стиль при наведении','Стиль первого дочернего','Стиль disabled'], a:1},
+  {t:'html', q:'Какой тег задаёт таблицу?', opts:['<grid>','<tb>','<table>','<tbl>'], a:2},
+  {t:'html', q:'Что делает overflow: hidden?', opts:['Скрывает элемент','Обрезает контент, выходящий за границы','Убирает скролл','Прячет border'], a:1},
+  {t:'html', q:'Как задать внешний отступ?', opts:['padding','border','margin','spacing'], a:2},
+  {t:'html', q:'Что делает тег <script> в конце body?', opts:['Загружает CSS','Загружает JS после HTML','Запускает PHP','Ничего'], a:1},
+  {t:'html', q:'Что делает justify-content: center во flex?', opts:['Выравнивает по вертикали','Центрирует по главной оси','Растягивает элементы','Переносит строки'], a:1},
+  {t:'html', q:'Что такое grid-template-columns?', opts:['Число строк сетки','Определяет колонки CSS Grid','Ширина ячейки','Отступ колонок'], a:1},
+  {t:'html', q:'Чем отличается em от rem?', opts:['em = px, rem = %','em — относительно родителя, rem — относительно :root','em больше rem','Они одинаковы'], a:1},
+  {t:'html', q:'Что делает тег <form>?', opts:['Форматирует текст','Создаёт форму для ввода','Рамка элемента','Группирует div'], a:1},
+  {t:'html', q:'Как сделать CSS-анимацию?', opts:['Только JS','@keyframes + animation','transition only','animation-name без keyframes'], a:1},
+  {t:'html', q:'Что делает align-items: center?', opts:['Центрирует по главной оси flex','Центрирует по поперечной оси','Растягивает','Переносит'], a:1},
+  {t:'html', q:'Что такое семантические теги HTML5?', opts:['Теги с data-атрибутами','Теги, несущие смысл (<article>, <nav>, <section>)','Теги только для SEO','Custom Elements'], a:1},
+  {t:'html', q:'Что делает border-radius?', opts:['Убирает рамку','Скругляет углы','Добавляет тень','Изменяет цвет рамки'], a:1},
+  {t:'html', q:'Как работает CSS-специфичность?', opts:['Последнее правило всегда побеждает','ID > class > tag','class > ID > tag','Нет приоритетов'], a:1},
+  {t:'html', q:'Что делает white-space: nowrap?', opts:['Убирает пробелы','Запрещает перенос строки','Добавляет отступ','Задаёт моноширинный шрифт'], a:1},
+  {t:'html', q:'Что такое атрибут data-* ?', opts:['Атрибут базы данных','Пользовательские данные в HTML','Зарезервированные данные','Атрибуты формы'], a:1},
+  {t:'html', q:'Какой тег для строки таблицы?', opts:['<td>','<th>','<tr>','<row>'], a:2},
+  {t:'html', q:'Что делает position: sticky?', opts:['Только фиксированный','Прилипает при скролле до точки','То же что absolute','Только в flex'], a:1},
+  {t:'html', q:'Как задать CSS только для печати?', opts:['@print {}','@media print {}','print: style','link print="css"'], a:1},
+  {t:'html', q:'Что делает transition в CSS?', opts:['Задаёт анимацию @keyframes','Плавно изменяет свойства при смене состояния','Меняет display','Трансформирует блок'], a:1},
+  {t:'html', q:'Чем отличается inline от block?', opts:['inline — блочный, block — строчный','block занимает всю ширину, inline — нет','Нет разницы','inline всегда шире'], a:1},
+  {t:'html', q:'Что делает тег <canvas>?', opts:['Видео','Область для рисования через JS','SVG-холст','Фоновое изображение'], a:1},
+  {t:'html', q:'Что такое viewport в мета-теге?', opts:['Размер шрифта','Управление масштабом на мобильных','Ширина контента','Заголовок вкладки'], a:1},
+  {t:'html', q:'Что делает cursor: pointer?', opts:['Скрывает курсор','Показывает курсор как руку','Блокирует клик','Меняет цвет'], a:1},
+  {t:'html', q:'Как импортировать шрифт из Google Fonts в CSS?', opts:['@font-face','@import url(...)','font-import:','link в HTML (оба варианта верны)'], a:3},
+  {t:'html', q:'Что делает word-break: break-all?', opts:['Удаляет пробелы','Разрывает слова в любом месте','Запрещает перенос','Только для CJK'], a:1},
+  {t:'html', q:'Что такое CSS reset?', opts:['Удаляет все стили','Сбрасывает браузерные стили по умолчанию','Очищает кэш','Перезагружает страницу'], a:1},
+  {t:'html', q:'Что делает тег <label for="id">?', opts:['Метка раздела','Связывает текст с input по id','Создаёт tooltip','Форматирует span'], a:1},
+  {t:'html', q:'Что такое BEM в CSS?', opts:['Bootstrap Element Method','Block Element Modifier — методология именования классов','Встроенный стандарт W3C','CSS-фреймворк'], a:1},
+  {t:'html', q:'Что делает flex-wrap: wrap?', opts:['Убирает flex','Переносит flex-элементы на новую строку','Сжимает элементы','Запрещает рост'], a:1},
+  {t:'html', q:'Как задать CSS-переменную и использовать её?', opts:['$c:red; color:$c','--c:red; color:var(--c)','set(c,red); use(c)','const c=red; color:c'], a:1},
+];
+
+// ============ STATE ============
+let currentUser = '';
+let currentQ = 0;
+let answers = [];
+let selected = null;
+let startTime = 0;
+let timerInterval = null;
+let quizStartTime = 0;
+
+// ============ AUTH ============
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+}
+function registerUser() {
+  const name = document.getElementById('reg-name').value.trim();
+  const pass = document.getElementById('reg-pass').value.trim();
+  const err = document.getElementById('reg-err');
+  if (!name) { err.textContent = '⚠ Введите имя пользователя'; return; }
+  if (pass.length < 4) { err.textContent = '⚠ Пароль должен быть не менее 4 символов'; return; }
+  err.textContent = '';
+  currentUser = name;
+  startQuiz();
+}
+function loginAdmin() {
+  const l = document.getElementById('adm-login').value.trim();
+  const p = document.getElementById('adm-pass').value.trim();
+  const err = document.getElementById('adm-err');
+  if (l === ADMIN_LOGIN && p === ADMIN_PASS) {
+    err.textContent = '';
+    showAdminPanel();
+  } else {
+    err.textContent = '⚠ Неверный логин или пароль';
   }
 }
-
-// Scroll
-function initScrollAnimations(){
-  const obs=new IntersectionObserver((entries)=>{
-    entries.forEach(e=>{
-      if(e.isIntersecting){const d=e.target.dataset.delay||0;setTimeout(()=>e.target.classList.add('visible'),+d);}
-    });
-  },{threshold:.15});
-  document.querySelectorAll('.card,[data-stanza]').forEach(el=>obs.observe(el));
+function goToAuth() {
+  clearInterval(timerInterval);
+  showPage('auth');
 }
 
-// Confetti
-function launchConfetti(){
-  const colors=['#e8829a','#d4a853','#f9d5e0','#7aab7e','#f0d68a','#c45c75'];
-  const container=document.querySelector('.hero');
-  const style=document.createElement('style');
-  style.textContent='@keyframes cfall{0%{opacity:1;transform:translateY(-20px) rotate(0deg)}100%{opacity:0;transform:translateY(250px) rotate(540deg)}}';
-  document.head.appendChild(style);
-  for(let i=0;i<60;i++){
-    const c=document.createElement('div');
-    c.style.cssText=`position:absolute;width:${Math.random()*6+4}px;height:${Math.random()*6+4}px;background:${colors[Math.floor(Math.random()*colors.length)]};border-radius:${Math.random()>.5?'50%':'2px'};left:${Math.random()*100}%;top:${Math.random()*100}%;opacity:0;pointer-events:none;animation:cfall ${Math.random()*3+2}s ${Math.random()*2}s ease forwards;`;
-    container.appendChild(c);
+// ============ QUIZ ============
+function startQuiz() {
+  currentQ = 0;
+  answers = Array(100).fill(null);
+  selected = null;
+  quizStartTime = Date.now();
+  document.getElementById('quiz-username').textContent = currentUser;
+  showPage('quiz');
+  renderQuestion();
+}
+function renderQuestion() {
+  const q = questions[currentQ];
+  document.getElementById('q-counter').textContent = `Вопрос ${currentQ + 1} / 100`;
+  const tag = document.getElementById('q-tag');
+  tag.textContent = q.t === 'python' ? 'Python' : 'HTML / CSS';
+  tag.className = 'q-tag ' + (q.t === 'python' ? 'python' : 'html');
+  document.getElementById('q-text').textContent = q.q;
+  const letters = ['A','B','C','D'];
+  const optDiv = document.getElementById('options');
+  optDiv.innerHTML = '';
+  q.opts.forEach((opt, i) => {
+    const div = document.createElement('div');
+    div.className = 'option' + (answers[currentQ] === i ? ' selected' : '');
+    div.innerHTML = `<div class="option-letter">${letters[i]}</div><span>${opt}</span>`;
+    div.onclick = () => selectOption(i);
+    optDiv.appendChild(div);
+  });
+  document.getElementById('progress-bar').style.width = ((currentQ / 100) * 100) + '%';
+  document.getElementById('btn-next').disabled = answers[currentQ] === null;
+  selected = answers[currentQ];
+  startTime = Date.now();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(updateTimer, 1000);
+  updateTimer();
+}
+function updateTimer() {
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const m = String(Math.floor(elapsed / 60)).padStart(2,'0');
+  const s = String(elapsed % 60).padStart(2,'0');
+  document.getElementById('q-timer').textContent = `⏱ ${m}:${s}`;
+}
+function selectOption(i) {
+  if (answers[currentQ] !== null && answers[currentQ] !== undefined) {
+    // Already answered, allow change
   }
+  answers[currentQ] = i;
+  selected = i;
+  document.querySelectorAll('.option').forEach((el, idx) => {
+    el.className = 'option' + (idx === i ? ' selected' : '');
+  });
+  document.getElementById('btn-next').disabled = false;
+}
+function nextQuestion() {
+  if (answers[currentQ] === null) return;
+  if (currentQ < 99) {
+    currentQ++;
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+}
+function finishQuiz() {
+  clearInterval(timerInterval);
+  const totalSec = Math.floor((Date.now() - quizStartTime) / 1000);
+  const mm = String(Math.floor(totalSec / 60)).padStart(2,'0');
+  const ss = String(totalSec % 60).padStart(2,'0');
+  let score = 0, pyScore = 0, htmlScore = 0;
+  let pyTotal = 0, htmlTotal = 0;
+  questions.forEach((q, i) => {
+    if (q.t === 'python') { pyTotal++;  if (answers[i] === q.a) { score++; pyScore++; } }
+    else { htmlTotal++; if (answers[i] === q.a) { score++; htmlScore++; } }
+  });
+  const pct = score;
+  let grade, gradeColor;
+  if (pct >= 90) { grade = '🏆 Отлично! Мастер Python & HTML/CSS'; gradeColor = 'var(--accent)'; }
+  else if (pct >= 75) { grade = '✅ Хорошо! Уверенный уровень'; gradeColor = 'var(--python)'; }
+  else if (pct >= 60) { grade = '📘 Зачёт. Продолжай учиться'; gradeColor = 'var(--accent3)'; }
+  else { grade = '❌ Нужно повторить материал'; gradeColor = 'var(--danger)'; }
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-py').textContent = `${pyScore}/${pyTotal}`;
+  document.getElementById('res-html').textContent = `${htmlScore}/${htmlTotal}`;
+  document.getElementById('res-pct').textContent = pct + '%';
+  document.getElementById('res-time').textContent = `${mm}:${ss}`;
+  const gradeEl = document.getElementById('res-grade');
+  gradeEl.textContent = grade;
+  gradeEl.style.color = gradeColor;
+  // Save
+  const letterGrade = pct >= 90 ? 'A' : pct >= 75 ? 'B' : pct >= 60 ? 'C' : 'D';
+  saveResult({
+    name: currentUser,
+    score,
+    pyScore,
+    htmlScore,
+    pct,
+    time: `${mm}:${ss}`,
+    grade: letterGrade,
+    date: new Date().toLocaleString('ru-RU')
+  });
+  showPage('result');
+}
+
+// ============ ADMIN ============
+function showAdminPanel() {
+  const results = getResults();
+  // Stats
+  document.getElementById('stat-total').textContent = results.length;
+  if (results.length > 0) {
+    const avg = (results.reduce((s,r) => s + r.score, 0) / results.length).toFixed(1);
+    const best = Math.max(...results.map(r => r.score));
+    const passed = results.filter(r => r.pct >= 60).length;
+    document.getElementById('stat-avg').textContent = avg;
+    document.getElementById('stat-best').textContent = best + '/100';
+    document.getElementById('stat-pass').textContent = Math.round(passed/results.length*100) + '%';
+  }
+  document.getElementById('admin-count').textContent = results.length + ' записей';
+  const body = document.getElementById('admin-table-body');
+  if (results.length === 0) {
+    body.innerHTML = '<div class="empty-state">Нет данных. Участники ещё не проходили тест.</div>';
+  } else {
+    const rows = results.map((r,i) => {
+      const badgeClass = r.grade === 'A' ? 'badge-a' : r.grade === 'B' ? 'badge-b' : r.grade === 'C' ? 'badge-c' : 'badge-d';
+      return `<tr>
+        <td style="color:var(--muted);font-family:'Space Mono',monospace;font-size:.8rem;">${i+1}</td>
+        <td style="font-weight:700;">${r.name}</td>
+        <td style="font-family:'Space Mono',monospace;">${r.score}/100</td>
+        <td style="color:var(--python);">${r.pyScore}/50</td>
+        <td style="color:var(--html);">${r.htmlScore}/50</td>
+        <td>${r.pct}%</td>
+        <td><span class="badge ${badgeClass}">${r.grade}</span></td>
+        <td style="color:var(--muted);font-size:.8rem;">${r.time}</td>
+        <td style="color:var(--muted);font-size:.78rem;font-family:'Space Mono',monospace;">${r.date}</td>
+      </tr>`;
+    }).reverse().join('');
+    body.innerHTML = `<table>
+      <thead><tr>
+        <th>#</th><th>Имя</th><th>Балл</th><th>Python</th><th>HTML/CSS</th><th>%</th><th>Оценка</th><th>Время</th><th>Дата</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+  showPage('admin');
 }
 </script>
 </body>
